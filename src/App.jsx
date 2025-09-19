@@ -5,6 +5,7 @@ export function App() {
   return (
     <Box>
       <Header />
+      <Header />
     </Box>
   );
 }
