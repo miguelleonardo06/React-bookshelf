@@ -10,9 +10,26 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { NavLink } from "react-router-dom";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
-
-const pages = ["TRENDING", "BROWSE", "RANDOM", "ABOUT"];
+const links = [
+  {
+    label: "Trending",
+    path: "/",
+  },
+  {
+    label: "Browse",
+    path: "/browse",
+  },
+  {
+    label: "Random",
+    path: "/random",
+  },
+  {
+    label: "About",
+    path: "/about",
+  },
+];
 
 export function Header() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -20,9 +37,6 @@ export function Header() {
 
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
-  };
-  const handleOpenUserMenu = (event) => {
-    setAnchorElUser(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
@@ -64,9 +78,13 @@ export function Header() {
               onClose={handleCloseNavMenu}
               sx={{ display: { xs: "block", md: "none" } }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography sx={{ textAlign: "center" }}>{page}</Typography>
+              {links.map((page) => (
+                <MenuItem key={page.path} onClick={handleCloseNavMenu}>
+                  <NavLink to={page.path}>
+                    <Typography sx={{ textAlign: "center", color: "white" }}>
+                      {page.label}
+                    </Typography>
+                  </NavLink>
                 </MenuItem>
               ))}
             </Menu>
@@ -74,7 +92,6 @@ export function Header() {
           <MenuBookIcon
             sx={{ marginRight: "5px", display: { xs: "none", md: "flex" } }}
           />
-          d
           <Typography
             variant="h5"
             noWrap
@@ -116,14 +133,15 @@ export function Header() {
             >
               BOOKSHELF
             </Typography>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+            {links.map((page) => (
+              <NavLink key={page.path} to={page.path}>
+                <Button
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page.label}
+                </Button>
+              </NavLink>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
