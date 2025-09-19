@@ -6,6 +6,8 @@ export function App() {
     <Box>
       <Header />
       <Header />
+      <Header />
+      <Header />
     </Box>
   );
 }
