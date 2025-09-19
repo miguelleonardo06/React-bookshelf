@@ -90,7 +90,7 @@ export function Header() {
               textDecoration: "none",
             }}
           >
-            BOOKSHELFFFFFFF
+            BOOKSHELF
           </Typography>
           <Box
             sx={{
