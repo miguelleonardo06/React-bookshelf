@@ -8,6 +8,7 @@ export function App() {
       <Header />
       <Header />
       <Header />
+      hello miko dev
     </Box>
   );
 }

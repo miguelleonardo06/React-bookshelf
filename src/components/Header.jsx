@@ -114,7 +114,7 @@ export function Header() {
                 textDecoration: "none",
               }}
             >
-              BOOKssssss
+              BOOKSHELF
             </Typography>
             {pages.map((page) => (
               <Button
