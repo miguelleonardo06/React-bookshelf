@@ -74,6 +74,7 @@ export function Header() {
           <MenuBookIcon
             sx={{ marginRight: "5px", display: { xs: "none", md: "flex" } }}
           />
+          d
           <Typography
             variant="h5"
             noWrap
@@ -125,7 +126,6 @@ export function Header() {
               </Button>
             ))}
           </Box>
-
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings"></Tooltip>
             <Menu
