@@ -113,7 +113,7 @@ export function Header() {
                 textDecoration: "none",
               }}
             >
-              BOOKSHELF
+              BOOK
             </Typography>
             {pages.map((page) => (
               <Button
