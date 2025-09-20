@@ -67,7 +67,7 @@ export function BrowsePage() {
       {/* Results show BELOW search box */}
       {submittedSearch && (
         <Box sx={{ width: "100%" }}>
-          <AutomaticSubject bookSearch={submittedSearch} />
+          <AutomaticSubject bookSearch={submittedSearch} limit={24} />
         </Box>
       )}
     </Box>

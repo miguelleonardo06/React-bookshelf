@@ -54,14 +54,14 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
         url: `${url}q=${bookSearch}`,
         method: "GET",
       })
-        .then((res) => setData(res.data.docs))
+        .then((res) => setData(res.data.docs.slice(0, limit)))
         .then(() => setIsLoading(false))
         .catch((err) => {
           setIsLoading(false);
           setError(err.message);
         });
     }
-  }, [title, subject, limit, bookSearch]);
+  }, []);
   return (
     <Box sx={{ padding: "10px 15px" }}>
       <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
@@ -91,10 +91,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
               ))
             : datas.map((data, index) => {
                 const rating = Number((Math.random() * (5 - 1) + 1).toFixed(1));
-                const description = ` Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-              Consequatur quibusdam iste nam, placeat a aperiam veritatis illo
-              explicabo tenetur, neque repudiandae beatae minus error itaque
-              provident quo quasi earum maiores.`;
+
                 return (
                   <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                     <Card
@@ -108,7 +105,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                       }}
                       onClick={() => {
                         setModalOpen(!isModalOpen);
-                        setSelectedItem({ ...data, rating, description });
+                        setSelectedItem({ ...data, rating, subject });
                       }}
                     >
                       <CardMedia
@@ -214,6 +211,22 @@ const style = {
 
 export default function MyModal({ isModalOpen, setModalOpen, selectedItem }) {
   const [isSeeMoreOpen, setIsSeeMoreOpen] = useState(false);
+  const [itemDetails, setItemDetails] = useState("");
+  const lorem =
+    "  Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim vero doloremque et dolore voluptate, error itaque ipsa vel totam nemo quibusdam eius eos quod, adipisci eaque facilis. Odio, repellendus pariatur.";
+
+  const url = `https://openlibrary.org`;
+  useEffect(() => {
+    if (selectedItem.subject === "trending") {
+      axios({
+        url: `${url}${selectedItem.key}.json`,
+        method: "GET",
+      }).then((res) => setItemDetails(res.data.description));
+    }
+  }, [selectedItem, itemDetails]);
+
+  console.log(selectedItem);
+
   if (!selectedItem) return null;
   return (
     <div>
@@ -226,7 +239,7 @@ export default function MyModal({ isModalOpen, setModalOpen, selectedItem }) {
         <Box sx={style}>
           <Box
             component="img"
-            sx={{ height: 300, width: 200, objectFit: "cover" }}
+            sx={{ height: "auto", width: 200, objectFit: "cover" }}
             src={`https://covers.openlibrary.org/b/id/${selectedItem.cover_i}-M.jpg`}
             alt={selectedItem.title}
           ></Box>
@@ -258,16 +271,18 @@ export default function MyModal({ isModalOpen, setModalOpen, selectedItem }) {
               {selectedItem.public_scan_b ? "Guaranteed" : "Not specified"}
             </Typography>
             <Typography variant="p" sx={{ fontWeight: 300, fontSize: "14px" }}>
-              {!isSeeMoreOpen
-                ? selectedItem.description.slice(0, 60) + "...."
-                : selectedItem.description}
-
+              {selectedItem.subject === "trending"
+                ? !isSeeMoreOpen && itemDetails
+                  ? itemDetails.slice(0, 60)
+                  : itemDetails
+                : lorem}
               <Button
                 variant="outlined"
                 sx={{ border: "none", width: "fit-content", fontSize: "12px" }}
                 onClick={() => setIsSeeMoreOpen(!isSeeMoreOpen)}
               >
-                {!isSeeMoreOpen ? "See More" : "Less"}
+                {selectedItem.subject === "trending" &&
+                  (isSeeMoreOpen ? "Less" : "See More")}
               </Button>
             </Typography>
           </Box>
