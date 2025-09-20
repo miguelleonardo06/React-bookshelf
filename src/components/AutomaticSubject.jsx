@@ -2,6 +2,7 @@ import {
   Box,
   Card,
   CardContent,
+  Chip,
   CardMedia,
   Typography,
   Grid,
@@ -9,7 +10,7 @@ import {
   Button,
   Skeleton,
 } from "@mui/material";
-
+import MovingIcon from "@mui/icons-material/Moving";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -23,9 +24,21 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
   const [selectedItem, setSelectedItem] = useState(null);
 
   const url = "https://openlibrary.org/search.json?";
+
   useEffect(() => {
     setIsLoading(true);
-    if (subject || limit) {
+    if (subject === "trending") {
+      axios({
+        url: "https://openlibrary.org/trending/daily.json",
+        method: "GET",
+      })
+        .then((res) => setData(res.data.works.slice(0, 12)))
+        .then(() => setIsLoading(false))
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err.message);
+        });
+    } else if (subject || limit) {
       axios({
         url: `${url}subject=${subject}&limit=${limit}`,
         method: "GET",
@@ -48,7 +61,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
           setError(err.message);
         });
     }
-  }, []);
+  }, [title, subject, limit, bookSearch]);
   return (
     <Box sx={{ padding: "10px 15px" }}>
       <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
@@ -132,15 +145,42 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                           Published: {data.first_publish_year}
                         </Typography>
 
-                        {/* Footer pinned at bottom */}
-                        <Box
-                          sx={{
-                            marginTop: "auto", // pushes this section to bottom
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        ></Box>
+                        {subject === "trending" && (
+                          <Box
+                            sx={{
+                              marginTop: "auto",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Chip
+                              icon={<MovingIcon />}
+                              label={`#${index + 1} Trending`}
+                              sx={{ fontWeight: 700, fontSize: "13px" }}
+                            />
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <StarIcon
+                                sx={{ color: "yellow", fontSize: "14px" }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 200,
+                                  fontSize: "13px",
+                                  opacity: 0.8,
+                                }}
+                              >
+                                {rating}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        )}
                       </CardContent>
                     </Card>
                   </Grid>

@@ -1,5 +1,5 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { Search } from "lucide-react";
+import { Search, TextAlignCenter } from "lucide-react";
 import { useState } from "react";
 import { AutomaticSubject } from "../components/AutomaticSubject";
 
@@ -36,7 +36,9 @@ export function BrowsePage() {
           gap: 1,
         }}
       >
-        <Typography variant="h3">Browse Books</Typography>
+        <Typography variant="h3" align="center">
+          Browse Books
+        </Typography>
 
         <Box sx={{ display: "flex" }}>
           <TextField
