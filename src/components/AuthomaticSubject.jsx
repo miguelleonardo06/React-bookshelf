@@ -12,6 +12,7 @@ import MovingIcon from "@mui/icons-material/Moving";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useState } from "react";
 import axios from "axios";
+
 export function AuthomaticSubject({ subject, limit, title }) {
   const [datas, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -66,6 +67,7 @@ export function AuthomaticSubject({ subject, limit, title }) {
                       display: "flex",
                       flexDirection: "column",
                     }}
+                    onClick={() => console.log("Clicked")}
                   >
                     <CardMedia
                       sx={{ height: 140 }}
