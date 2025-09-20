@@ -12,17 +12,17 @@ import MovingIcon from "@mui/icons-material/Moving";
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useState } from "react";
 import axios from "axios";
-export function Trending() {
-  const [trendings, setTrending] = useState([]);
+export function AuthomaticSubject({ subject, limit, title }) {
+  const [datas, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   useEffect(() => {
     setIsLoading(true);
     axios({
-      url: "https://openlibrary.org/trending/daily.json",
+      url: `https://openlibrary.org/search.json?subject=${subject}&limit=${limit}`,
       method: "GET",
     })
-      .then((res) => setTrending(res.data.works.slice(0, 12)))
+      .then((res) => setData(res.data.docs))
       .then(() => setIsLoading(false))
       .catch((err) => {
         setIsLoading(false);
@@ -32,7 +32,7 @@ export function Trending() {
   return (
     <Box sx={{ padding: "10px 15px" }}>
       <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
-        Trending Books Today
+        {title}
       </Typography>
       <Typography
         variant="h5"
@@ -43,7 +43,7 @@ export function Trending() {
       <Box sx={{ margin: "25px 0px" }}>
         <Grid container spacing={2}>
           {isLoading
-            ? Array.from(new Array(8)).map((_, index) => (
+            ? Array.from(new Array(6)).map((_, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <Skeleton
                     variant="rectangular"
@@ -56,7 +56,7 @@ export function Trending() {
                   />
                 </Grid>
               ))
-            : trendings.map((trending, index) => (
+            : datas.map((data, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
                   <Card
                     sx={{
@@ -69,7 +69,7 @@ export function Trending() {
                   >
                     <CardMedia
                       sx={{ height: 140 }}
-                      image={`https://covers.openlibrary.org/b/id/${trending.cover_i}-M.jpg`}
+                      image={`https://covers.openlibrary.org/b/id/${data.cover_i}-M.jpg`}
                     />
                     <CardContent
                       sx={{
@@ -80,17 +80,17 @@ export function Trending() {
                       }}
                     >
                       <Typography sx={{ fontWeight: 800 }}>
-                        {trending.title}
+                        {data.title}
                       </Typography>
                       <Typography
                         sx={{ fontWeight: 200, fontSize: "13px", opacity: 0.8 }}
                       >
-                        By {trending.author_name}
+                        By {data.author_name}
                       </Typography>
                       <Typography
                         sx={{ fontWeight: 200, fontSize: "13px", opacity: 0.8 }}
                       >
-                        Published: {trending.first_publish_year}
+                        Published: {data.first_publish_year}
                       </Typography>
 
                       {/* Footer pinned at bottom */}
