@@ -38,7 +38,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
           setIsLoading(false);
           setError(err.message);
         });
-    } else if (subject || limit) {
+    } else if (subject && limit) {
       axios({
         url: `${url}subject=${subject}&limit=${limit}`,
         method: "GET",
@@ -54,25 +54,41 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
         url: `${url}q=${bookSearch}`,
         method: "GET",
       })
-        .then((res) => setData(res.data.docs.slice(0, limit)))
-        .then(() => setIsLoading(false))
-        .catch((err) => {
+        .then((res) => {
+          setData(res.data.docs.slice(0, limit));
+        })
+        .then(() => {
           setIsLoading(false);
-          setError(err.message);
+        })
+        .catch(() => {
+          setIsLoading(false);
+          setError("No books found.");
         });
     }
-  }, []);
+  }, [bookSearch]);
+
   return (
     <Box sx={{ padding: "10px 15px" }}>
       <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
         {title}
       </Typography>
-      <Typography
-        variant="h5"
-        sx={{ fontWeight: 300, fontSize: "20px", color: "red" }}
-      >
-        {error}
-      </Typography>
+
+      {!isLoading && datas.length === 0 ? (
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 300, fontSize: "20px", color: "red" }}
+        >
+          {"No books found."}
+        </Typography>
+      ) : (
+        <Typography
+          variant="h5"
+          sx={{ fontWeight: 300, fontSize: "20px", color: "red" }}
+        >
+          {error}
+        </Typography>
+      )}
+
       <Box sx={{ margin: "25px 0px" }}>
         <Grid container spacing={2}>
           {isLoading
@@ -142,7 +158,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                           Published: {data.first_publish_year}
                         </Typography>
 
-                        {subject === "trending" && (
+                        {subject === "trending" ? (
                           <Box
                             sx={{
                               marginTop: "auto",
@@ -160,6 +176,37 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                               sx={{
                                 display: "flex",
                                 alignItems: "center",
+                                gap: 1,
+                              }}
+                            >
+                              <StarIcon
+                                sx={{ color: "yellow", fontSize: "14px" }}
+                              />
+                              <Typography
+                                sx={{
+                                  fontWeight: 200,
+                                  fontSize: "13px",
+                                  opacity: 0.8,
+                                }}
+                              >
+                                {rating}
+                              </Typography>
+                            </Box>
+                          </Box>
+                        ) : (
+                          <Box
+                            sx={{
+                              marginTop: "auto",
+                              display: "flex",
+                              justifyContent: "end",
+                              alignItems: "center",
+                            }}
+                          >
+                            <Box
+                              sx={{
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "end",
                                 gap: 1,
                               }}
                             >
@@ -282,7 +329,7 @@ export default function MyModal({ isModalOpen, setModalOpen, selectedItem }) {
                 onClick={() => setIsSeeMoreOpen(!isSeeMoreOpen)}
               >
                 {selectedItem.subject === "trending" &&
-                  (isSeeMoreOpen ? "Less" : "See More")}
+                  (isSeeMoreOpen ? "Less" : "See More...")}
               </Button>
             </Typography>
           </Box>
