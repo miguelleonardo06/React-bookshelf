@@ -78,6 +78,7 @@ export function Trending() {
                         backgroundColor: "rgba(0,0,0,0.5)",
                         display: "flex",
                         flexDirection: "column",
+                        cursor: "pointer",
                       }}
                       onClick={() => {
                         setModalOpen(!isModalOpen);

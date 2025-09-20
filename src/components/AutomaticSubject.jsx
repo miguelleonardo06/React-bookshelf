@@ -4,36 +4,50 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Chip,
   Grid,
   Modal,
   Button,
   Skeleton,
 } from "@mui/material";
-import MovingIcon from "@mui/icons-material/Moving";
+
 import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function AuthomaticSubject({ subject, limit, title }) {
+export function AutomaticSubject({ subject, limit, title, bookSearch }) {
   const [datas, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
+
+  const url = "https://openlibrary.org/search.json?";
   useEffect(() => {
     setIsLoading(true);
-    axios({
-      url: `https://openlibrary.org/search.json?subject=${subject}&limit=${limit}`,
-      method: "GET",
-    })
-      .then((res) => setData(res.data.docs))
-      .then(() => setIsLoading(false))
-      .catch((err) => {
-        setIsLoading(false);
-        setError(err.message);
-      });
+    if (subject || limit) {
+      axios({
+        url: `${url}subject=${subject}&limit=${limit}`,
+        method: "GET",
+      })
+        .then((res) => setData(res.data.docs))
+        .then(() => setIsLoading(false))
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err.message);
+        });
+    } else if (bookSearch) {
+      axios({
+        url: `${url}q=${bookSearch}`,
+        method: "GET",
+      })
+        .then((res) => setData(res.data.docs))
+        .then(() => setIsLoading(false))
+        .catch((err) => {
+          setIsLoading(false);
+          setError(err.message);
+        });
+    }
   }, []);
   return (
     <Box sx={{ padding: "10px 15px" }}>
@@ -73,10 +87,11 @@ export function AuthomaticSubject({ subject, limit, title }) {
                     <Card
                       sx={{
                         width: 250,
-                        height: 350,
+                        height: 300,
                         backgroundColor: "rgba(0,0,0,0.5)",
                         display: "flex",
                         flexDirection: "column",
+                        cursor: "pointer",
                       }}
                       onClick={() => {
                         setModalOpen(!isModalOpen);
@@ -125,33 +140,7 @@ export function AuthomaticSubject({ subject, limit, title }) {
                             justifyContent: "space-between",
                             alignItems: "center",
                           }}
-                        >
-                          <Chip
-                            icon={<MovingIcon />}
-                            label={`#${index + 1} Trending`}
-                            sx={{ fontWeight: 700, fontSize: "13px" }}
-                          />
-                          <Box
-                            sx={{
-                              display: "flex",
-                              alignItems: "center",
-                              gap: 1,
-                            }}
-                          >
-                            <StarIcon
-                              sx={{ color: "yellow", fontSize: "14px" }}
-                            />
-                            <Typography
-                              sx={{
-                                fontWeight: 200,
-                                fontSize: "13px",
-                                opacity: 0.8,
-                              }}
-                            >
-                              {Number((Math.random() * (5 - 1) + 1).toFixed(1))}
-                            </Typography>
-                          </Box>
-                        </Box>
+                        ></Box>
                       </CardContent>
                     </Card>
                   </Grid>

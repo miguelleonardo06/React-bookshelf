@@ -12,6 +12,8 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { NavLink } from "react-router-dom";
 import MenuBookIcon from "@mui/icons-material/MenuBook";
+import { BorderBottom } from "@mui/icons-material";
+
 const links = [
   {
     label: "Trending",
@@ -48,7 +50,7 @@ export function Header() {
   };
 
   return (
-    <AppBar position="static">
+    <AppBar position="relative">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Box sx={{ display: { xs: "flex", md: "none" } }}>
@@ -80,8 +82,14 @@ export function Header() {
             >
               {links.map((page) => (
                 <MenuItem key={page.path} onClick={handleCloseNavMenu}>
-                  <NavLink to={page.path}>
-                    <Typography sx={{ textAlign: "center", color: "white" }}>
+                  <NavLink to={page.path} style={{ textDecoration: "none" }}>
+                    <Typography
+                      sx={{
+                        textAlign: "center",
+                        color: "white",
+                        fontWeight: "normal",
+                      }}
+                    >
                       {page.label}
                     </Typography>
                   </NavLink>

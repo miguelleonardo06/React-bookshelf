@@ -1,6 +1,6 @@
 import { Trending } from "../components/Trending";
 import { Box, Divider } from "@mui/material";
-import { AuthomaticSubject } from "../components/AuthomaticSubject";
+import { AutomaticSubject } from "../components/AutomaticSubject";
 export function HomePage() {
   return (
     <Box
@@ -11,15 +11,15 @@ export function HomePage() {
     >
       <Trending />
       <Divider />
-      <AuthomaticSubject title="Popular Fiction" subject="fiction" limit={6} />
+      <AutomaticSubject title="Popular Fiction" subject="fiction" limit={6} />
       <Divider />
-      <AuthomaticSubject
+      <AutomaticSubject
         title="Science & Technology"
         subject="science"
         limit={6}
       />
       <Divider />
-      <AuthomaticSubject
+      <AutomaticSubject
         title="History & Biography"
         subject="history"
         limit={6}
