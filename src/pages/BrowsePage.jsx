@@ -11,7 +11,6 @@ export function BrowsePage() {
     setSubmittedSearch(encodeURIComponent(bookSearch));
   }
 
-  console.log(submittedSearch);
   return (
     <Box
       sx={{

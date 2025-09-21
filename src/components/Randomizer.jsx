@@ -16,84 +16,51 @@ import StarIcon from "@mui/icons-material/Star";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-export function AutomaticSubject({ subject, limit, title, bookSearch }) {
-  const [datas, setData] = useState([]);
+const subjects = [
+  "fiction",
+  "science",
+  "history",
+  "mystery",
+  "romance",
+  "fantasy",
+  "biography",
+  "adventure",
+  "thriller",
+  "comedy",
+  "drama",
+  "poetry",
+];
+export function Randomizer({ isRandomizerOn }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
 
+  const [discovered, setDiscovered] = useState([]);
+
   const url = "https://openlibrary.org/search.json?";
 
   useEffect(() => {
+    if (!isRandomizerOn) return;
     setIsLoading(true);
-    if (subject === "trending") {
-      axios({
-        url: "https://openlibrary.org/trending/daily.json",
-        method: "GET",
-      })
-        .then((res) => setData(res.data.works.slice(0, 12)))
-        .then(() => setIsLoading(false))
-        .catch((err) => {
-          setIsLoading(false);
-          setError(err.message);
-        });
-    } else if (subject && limit) {
-      axios({
-        url: `${url}subject=${subject}&limit=${limit}`,
-        method: "GET",
-      })
-        .then((res) => setData(res.data.docs))
-        .then(() => setIsLoading(false))
-        .catch((err) => {
-          setIsLoading(false);
-          setError(err.message);
-        });
-    } else if (bookSearch) {
-      axios({
-        url: `${url}q=${bookSearch}`,
-        method: "GET",
-      })
+    let index = 0;
+    for (let i = 0; i < 12; i++) {
+      axios
+        .get(`${url}subject=${subjects[index]}&limit=2`)
         .then((res) => {
-          setData(res.data.docs.slice(0, limit));
+          setDiscovered((prev) => [...prev, ...res.data.docs]);
         })
-        .then(() => {
-          setIsLoading(false);
-        })
-        .catch(() => {
-          setIsLoading(false);
-          setError("No books found.");
-        });
+        .catch((err) => setError(err.message));
+
+      index = index + 1;
     }
-  }, [bookSearch]);
+    setIsLoading(false);
+  }, [isRandomizerOn]);
 
   return (
     <Box sx={{ padding: "10px 15px" }}>
-      <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
-        {title}
-      </Typography>
-
-      {!isLoading && datas.length === 0 ? (
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 300,
-            fontSize: "20px",
-            textAlign: "center",
-            color: "white",
-            backgroundColor: "rgba(255, 0, 0, 0.5)",
-            padding: "5px",
-            display: "flex",
-            alignContent: "center",
-            justifyContent: "center",
-            gap: 1,
-          }}
-        >
-          <InfoIcon />
-          {"No books found."}
-        </Typography>
-      ) : (
+      {error && (
         <Typography
           variant="h5"
           sx={{ fontWeight: 300, fontSize: "20px", color: "red" }}
@@ -101,7 +68,6 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
           {error}
         </Typography>
       )}
-
       <Box sx={{ margin: "25px 0px" }}>
         <Grid container spacing={2}>
           {isLoading
@@ -118,7 +84,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                   />
                 </Grid>
               ))
-            : datas.map((data, index) => {
+            : discovered.map((data, index) => {
                 const rating = Number((Math.random() * (5 - 1) + 1).toFixed(1));
 
                 return (
@@ -134,7 +100,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                       }}
                       onClick={() => {
                         setModalOpen(!isModalOpen);
-                        setSelectedItem({ ...data, rating, subject });
+                        setSelectedItem({ ...data, rating });
                       }}
                     >
                       <CardMedia
@@ -146,7 +112,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                           display: "flex",
                           flexDirection: "column",
                           gap: 1,
-                          flexGrow: 1, // take available space
+                          flexGrow: 1,
                         }}
                       >
                         <Typography sx={{ fontWeight: 800 }}>
@@ -159,7 +125,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                             opacity: 0.8,
                           }}
                         >
-                          By {data.author_name}
+                          By {data.author_name?.join(", ")}
                         </Typography>
                         <Typography
                           sx={{
@@ -170,74 +136,6 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
                         >
                           Published: {data.first_publish_year}
                         </Typography>
-
-                        {subject === "trending" ? (
-                          <Box
-                            sx={{
-                              marginTop: "auto",
-                              display: "flex",
-                              justifyContent: "space-between",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Chip
-                              icon={<MovingIcon />}
-                              label={`#${index + 1} Trending`}
-                              sx={{ fontWeight: 700, fontSize: "13px" }}
-                            />
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                gap: 1,
-                              }}
-                            >
-                              <StarIcon
-                                sx={{ color: "yellow", fontSize: "14px" }}
-                              />
-                              <Typography
-                                sx={{
-                                  fontWeight: 200,
-                                  fontSize: "13px",
-                                  opacity: 0.8,
-                                }}
-                              >
-                                {rating}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        ) : (
-                          <Box
-                            sx={{
-                              marginTop: "auto",
-                              display: "flex",
-                              justifyContent: "end",
-                              alignItems: "center",
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "end",
-                                gap: 1,
-                              }}
-                            >
-                              <StarIcon
-                                sx={{ color: "yellow", fontSize: "14px" }}
-                              />
-                              <Typography
-                                sx={{
-                                  fontWeight: 200,
-                                  fontSize: "13px",
-                                  opacity: 0.8,
-                                }}
-                              >
-                                {rating}
-                              </Typography>
-                            </Box>
-                          </Box>
-                        )}
                       </CardContent>
                     </Card>
                   </Grid>
@@ -245,6 +143,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
               })}
         </Grid>
       </Box>
+
       {isModalOpen && (
         <MyModal
           isModalOpen={isModalOpen}
