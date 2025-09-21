@@ -15,13 +15,13 @@ export function BrowsePage() {
     <Box
       sx={{
         width: "100%",
-        minHeight: "100vh", // 👈 allow page to expand
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         gap: 2,
-        py: 4, // add some top padding
+        py: 4,
         zIndex: 1,
       }}
     >

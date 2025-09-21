@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import { Routes, Route } from "react-router-dom";
 import { HomePage } from "./pages/HomePage";
 import { BrowsePage } from "./pages/BrowsePage";
-import { About } from "./pages/About";
+import { AboutPage } from "./pages/AboutPage";
 import { RandomizerPage } from "./pages/RandomizerPage";
 export function App() {
   return (
@@ -12,7 +12,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/browse" element={<BrowsePage />} />
-        <Route path="/about" element={<About />} />
+        <Route path="/about" element={<AboutPage />} />
         <Route path="/random" element={<RandomizerPage />} />
       </Routes>
     </Box>

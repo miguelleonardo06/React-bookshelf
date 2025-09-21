@@ -32,7 +32,6 @@ const subjects = [
 ];
 export function Randomizer({ isRandomizerOn }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
@@ -46,12 +45,9 @@ export function Randomizer({ isRandomizerOn }) {
     setIsLoading(true);
     let index = 0;
     for (let i = 0; i < 12; i++) {
-      axios
-        .get(`${url}subject=${subjects[index]}&limit=2`)
-        .then((res) => {
-          setDiscovered((prev) => [...prev, ...res.data.docs]);
-        })
-        .catch((err) => setError(err.message));
+      axios.get(`${url}subject=${subjects[index]}&limit=2`).then((res) => {
+        setDiscovered((prev) => [...prev, ...res.data.docs]);
+      });
 
       index = index + 1;
     }
@@ -60,16 +56,15 @@ export function Randomizer({ isRandomizerOn }) {
 
   return (
     <Box sx={{ padding: "10px 15px" }}>
-      {error && (
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: 300, fontSize: "20px", color: "red" }}
-        >
-          {error}
-        </Typography>
-      )}
       <Box sx={{ margin: "25px 0px" }}>
-        <Grid container spacing={2}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {isLoading
             ? Array.from(new Array(6)).map((_, index) => (
                 <Grid item xs={12} sm={6} md={4} lg={3} key={index}>

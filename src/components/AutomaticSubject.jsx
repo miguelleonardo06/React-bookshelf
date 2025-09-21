@@ -69,7 +69,7 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
   }, [bookSearch]);
 
   return (
-    <Box sx={{ padding: "10px 15px" }}>
+    <Box sx={{ padding: "10px 15px", width: "100%" }}>
       <Typography variant="h3" sx={{ fontWeight: 500, fontSize: "24px" }}>
         {title}
       </Typography>
@@ -103,10 +103,17 @@ export function AutomaticSubject({ subject, limit, title, bookSearch }) {
       )}
 
       <Box sx={{ margin: "25px 0px" }}>
-        <Grid container spacing={2}>
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
           {isLoading
-            ? Array.from(new Array(6)).map((_, index) => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+            ? Array.from(new Array(12)).map((_, index) => (
+                <Grid item xs={12} sm={6} md={5} lg={3} key={index}>
                   <Skeleton
                     variant="rectangular"
                     width={250}
